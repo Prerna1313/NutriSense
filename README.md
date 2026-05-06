@@ -2,6 +2,13 @@
 
 AI-powered meal analyzer and daily habit tracker.
 
+## Live Demo
+[https://nutrisense-amd-ai.web.app](https://nutrisense-amd-ai.web.app)
+
+## Submission Links
+- Live app: [https://nutrisense-amd-ai.web.app](https://nutrisense-amd-ai.web.app)
+- GitHub repo: [https://github.com/Prerna1313/NutriSense](https://github.com/Prerna1313/NutriSense)
+
 ## Setup
 1. Clone this repo
 2. Run `npm install`
@@ -10,10 +17,10 @@ AI-powered meal analyzer and daily habit tracker.
 
 ## Deploy
 1. Run `npm run build`
-2. Run `firebase deploy`
+2. Run `firebase deploy --only hosting`
 
 ## Tech
 - React + Vite + Tailwind CSS
-- Google Gemini 1.5 Flash API
+- Google Gemini 2.5 Flash API
 - Firebase Hosting + Firestore
 - localStorage for instant reads, Firestore for durability
