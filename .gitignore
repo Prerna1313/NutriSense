@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit this
+.env
+.env.local
+.env.production
+
+# Build output
+dist/
+
+# Vite cache
+.vite/
+
+# OS
+.DS_Store
+Thumbs.db
