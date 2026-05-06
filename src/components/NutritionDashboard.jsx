@@ -1,8 +1,9 @@
 import React from 'react';
 import MacroTracker from './MacroTracker';
 
-const NutritionDashboard = ({ profile, mealLogs, onAddMeal }) => {
+const NutritionDashboard = ({ profile = {}, mealLogs = [], onAddMeal = () => {} }) => {
   const recentMeals = [...mealLogs].reverse().slice(0, 5);
+  const displayName = profile.name || 'there';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 animate-in fade-in duration-700">
@@ -10,7 +11,7 @@ const NutritionDashboard = ({ profile, mealLogs, onAddMeal }) => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-4xl font-black tracking-tight mb-2">
-            Welcome back, <span className="text-primary">{profile.name}</span>!
+            Welcome back, <span className="text-primary">{displayName}</span>!
           </h1>
           <p className="text-muted-foreground font-medium">
             Here's your nutritional summary for today.
@@ -41,21 +42,21 @@ const NutritionDashboard = ({ profile, mealLogs, onAddMeal }) => {
                 <div key={index} className="glassmorphism p-6 rounded-3xl border border-white/10 flex items-center gap-6 hover:border-primary/30 transition-colors">
                   <div className="w-16 h-16 rounded-2xl bg-muted overflow-hidden flex-shrink-0 border border-white/5">
                     {meal.image ? (
-                      <img src={meal.image} alt={meal.foodName} className="w-full h-full object-cover" />
+                      <img src={meal.image} alt={meal.mealName || meal.foodName || 'Logged meal'} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl">🍲</div>
+                      <div className="w-full h-full flex items-center justify-center text-sm font-black text-primary">MEAL</div>
                     )}
                   </div>
                   <div className="flex-grow">
-                    <h4 className="font-black text-lg">{meal.foodName}</h4>
+                    <h4 className="font-black text-lg">{meal.mealName || meal.foodName || 'Logged meal'}</h4>
                     <div className="flex gap-4 mt-1 text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <span>{meal.calories} kcal</span>
-                      <span>•</span>
+                      <span aria-hidden="true">/</span>
                       <span>{meal.protein}g P</span>
-                      <span>•</span>
+                      <span aria-hidden="true">/</span>
                       <span>{meal.carbs}g C</span>
-                      <span>•</span>
-                      <span>{meal.fats}g F</span>
+                      <span aria-hidden="true">/</span>
+                      <span>{meal.fat ?? meal.fats}g F</span>
                     </div>
                   </div>
                   <div className="text-right">
@@ -68,7 +69,7 @@ const NutritionDashboard = ({ profile, mealLogs, onAddMeal }) => {
               ))
             ) : (
               <div className="glassmorphism p-12 rounded-[2.5rem] border border-white/10 text-center space-y-4">
-                <div className="text-4xl">📸</div>
+                <div className="text-4xl font-black text-primary">+</div>
                 <h4 className="text-xl font-black">No meals logged yet</h4>
                 <p className="text-muted-foreground max-w-xs mx-auto">
                   Take a photo of your first meal to start tracking your nutrition automatically.
@@ -83,7 +84,7 @@ const NutritionDashboard = ({ profile, mealLogs, onAddMeal }) => {
           {/* AI Insight Card */}
           <div className="glassmorphism p-8 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-primary/10 via-transparent to-transparent">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-xl shadow-lg shadow-primary/20">✨</div>
+              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-xl font-black text-primary-foreground shadow-lg shadow-primary/20">AI</div>
               <h3 className="text-lg font-black uppercase tracking-widest text-primary">AI Insight</h3>
             </div>
             <p className="text-sm font-medium leading-relaxed text-muted-foreground">

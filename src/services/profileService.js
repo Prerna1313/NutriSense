@@ -6,6 +6,16 @@ import { db } from './firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const LS_KEY = 'nutrisense_profile';
+const FIRESTORE_READ_TIMEOUT_MS = 3000;
+
+const withTimeout = (promise, ms) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore request timed out')), ms)
+    ),
+  ]);
+
 // Use a stable anonymous device ID so data survives page refreshes.
 const getDeviceId = () => {
   let id = localStorage.getItem('nutrisense_device_id');
@@ -27,7 +37,7 @@ export const loadProfile = async () => {
   // 2. Fallback to Firestore
   try {
     const ref = doc(db, 'users', getDeviceId(), 'data', 'profile');
-    const snap = await getDoc(ref);
+    const snap = await withTimeout(getDoc(ref), FIRESTORE_READ_TIMEOUT_MS);
     if (snap.exists()) {
       const profile = snap.data();
       localStorage.setItem(LS_KEY, JSON.stringify(profile));

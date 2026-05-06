@@ -5,9 +5,9 @@ import { deleteMeal } from '../services/logService';
 import { Trash2 } from 'lucide-react';
 
 const verdictConfig = {
-  good:    { label: '✓ Good',  cls: 'bg-emerald-100 text-emerald-700' },
+  good:    { label: 'Good',  cls: 'bg-emerald-100 text-emerald-700' },
   partial: { label: '~ Fair',  cls: 'bg-amber-100 text-amber-700' },
-  avoid:   { label: '✗ Avoid', cls: 'bg-rose-100 text-rose-700' },
+  avoid:   { label: 'Avoid', cls: 'bg-rose-100 text-rose-700' },
 };
 
 const formatTime = (isoString) =>
@@ -35,7 +35,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
   const macros = [
     {
       label: 'Calories',
-      icon: '🔥',
+      icon: 'Cal',
       current: totals.calories,
       target: caloTarget,
       unit: 'kcal',
@@ -43,7 +43,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
     },
     {
       label: 'Protein',
-      icon: '💪',
+      icon: 'P',
       current: totals.protein,
       target: Math.round(caloTarget * 0.075),
       unit: 'g',
@@ -51,7 +51,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
     },
     {
       label: 'Carbs',
-      icon: '🌾',
+      icon: 'C',
       current: totals.carbs,
       target: Math.round(caloTarget * 0.1375),
       unit: 'g',
@@ -59,7 +59,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
     },
     {
       label: 'Fat',
-      icon: '🥑',
+      icon: 'F',
       current: totals.fat,
       target: Math.round(caloTarget * 0.0333),
       unit: 'g',
@@ -78,7 +78,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
       <div>
         <h2 className="text-3xl font-bold tracking-tight">{formatDate()}</h2>
         <p className="text-slate-400 mt-1 font-medium">
-          {entries.length} meal{entries.length !== 1 ? 's' : ''} logged ·{' '}
+          {entries.length} meal{entries.length !== 1 ? 's' : ''} logged -{' '}
           {Math.round(totals.calories)} kcal consumed
         </p>
       </div>
@@ -96,7 +96,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
       {/* Section C — Meal List */}
       {entries.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
-          <span className="text-5xl" aria-hidden="true">🍽</span>
+          <span className="text-5xl font-black text-emerald-400" aria-hidden="true">+</span>
           <p className="text-lg font-medium text-slate-600">No meals logged today</p>
           <p className="text-sm text-slate-400">Analyze your first meal to get started</p>
           <button
@@ -104,7 +104,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
             aria-label="Go to Analyze Meal tab"
             className="mt-2 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
           >
-            Analyze a Meal →
+            Analyze a Meal
           </button>
         </div>
       ) : (

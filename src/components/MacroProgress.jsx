@@ -15,7 +15,7 @@ const MacroProgress = ({ label, icon, current, target, unit, colorClass }) => {
           <span aria-hidden="true">{icon}</span>
           {label}
           {isOver && (
-            <span className="ml-1 text-rose-500" aria-label="Over target">⚠</span>
+            <span className="ml-1 text-rose-500" aria-label="Over target">!</span>
           )}
         </span>
         <span className="text-slate-500 tabular-nums">

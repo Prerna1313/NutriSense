@@ -16,6 +16,15 @@ import {
 import { aggregateMacros } from '../utils/nutrition';
 
 const STORAGE_KEY = 'nutrisense_log';
+const FIRESTORE_READ_TIMEOUT_MS = 3000;
+
+const withTimeout = (promise, ms) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore request timed out')), ms)
+    ),
+  ]);
 
 // ── Device ID (stable anonymous identity) ──────────────────────────────────
 const getDeviceId = () => {
@@ -119,7 +128,7 @@ export const deleteMeal = (id) => {
   // 2. Firestore — find the doc with this id and delete it
   const mealsCol = collection(db, 'users', getDeviceId(), 'meals');
   const q = query(mealsCol, where('id', '==', id));
-  getDocs(q)
+  withTimeout(getDocs(q), FIRESTORE_READ_TIMEOUT_MS)
     .then((snap) => snap.forEach((d) => deleteDoc(d.ref)))
     .catch((e) => console.warn('[logService] Firestore delete failed:', e.message));
 };
@@ -135,7 +144,7 @@ export const syncFromFirestore = async () => {
   try {
     const mealsCol = collection(db, 'users', getDeviceId(), 'meals');
     const q = query(mealsCol, where('dateKey', '==', getTodayKey()));
-    const snap = await getDocs(q);
+    const snap = await withTimeout(getDocs(q), FIRESTORE_READ_TIMEOUT_MS);
 
     if (snap.empty) return;
 

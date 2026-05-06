@@ -4,7 +4,7 @@ import MealAnalyzer from './components/MealAnalyzer';
 import AnalysisCard from './components/AnalysisCard';
 import NutritionDashboard from './components/NutritionDashboard';
 import Dashboard from './components/Dashboard';
-import { logMeal, getTodayEntries, deleteMeal, syncFromFirestore } from './services/logService';
+import { logMeal, getTodayEntries, syncFromFirestore } from './services/logService';
 import { loadProfile, saveProfile, clearProfile } from './services/profileService';
 import { Activity, Leaf, LogOut, Flame, History, User, Utensils, ClipboardList } from 'lucide-react';
 
@@ -41,8 +41,8 @@ function App() {
     setActiveTab('analyze');
   };
 
-  const handleAnalysisComplete = (result) => {
-    setAnalysisResult(result);
+  const handleAnalysisComplete = (result, image) => {
+    setAnalysisResult({ ...result, image });
   };
 
   const handleLogMeal = (analysis) => {
@@ -82,7 +82,7 @@ function App() {
     setTodayEntries([]);
   };
 
-  // ── Calorie budget (derived) ───────────────────────────────────────────────
+  // Derived calorie budget.
   const todayCalories = useMemo(
     () => todayEntries.reduce((sum, e) => sum + (e.estimatedCalories ?? 0), 0),
     [todayEntries]
@@ -91,7 +91,6 @@ function App() {
   const remaining = Math.round(calorieTarget - todayCalories);
   const calorieProgress = Math.min(100, (todayCalories / calorieTarget) * 100) || 0;
 
-  // ── Legacy today stats (for sidebar progress bar) ─────────────────────────
   const getTodayStats = () => {
     const today = new Date().toDateString();
     return mealHistory
@@ -131,7 +130,7 @@ function App() {
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      {/* ── Sidebar ──────────────────────────────────────────────────────── */}
+      {/* Sidebar */}
       <aside className="w-72 glassmorphism border-r border-border hidden md:flex flex-col z-10">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
@@ -223,7 +222,7 @@ function App() {
         </div>
       </aside>
 
-      {/* ── Mobile bottom bar ─────────────────────────────────────────────── */}
+      {/* Mobile bottom bar */}
       <nav
         aria-label="Mobile navigation"
         className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-background/95 backdrop-blur border-t border-border flex"
@@ -244,7 +243,7 @@ function App() {
         ))}
       </nav>
 
-      {/* ── Main Content ──────────────────────────────────────────────────── */}
+      {/* Main content */}
       <main
         id="main-content"
         className="flex-1 overflow-y-auto relative scroll-smooth pb-20 md:pb-0"
@@ -269,7 +268,7 @@ function App() {
 
         <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-12 animate-fade-in-up">
 
-          {/* ── Analyze Meal ── */}
+          {/* Analyze meal */}
           <section
             aria-labelledby="tab-analyze"
             role="tabpanel"
@@ -300,7 +299,7 @@ function App() {
                       className="w-[120px] h-[120px] rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center"
                       aria-hidden="true"
                     >
-                      <span className="text-5xl">🥗</span>
+                      <Leaf size={56} className="text-emerald-400" />
                     </div>
                     <p className="text-slate-400 dark:text-slate-500 text-sm">
                       Your meal analysis will appear here
@@ -311,7 +310,7 @@ function App() {
             )}
           </section>
 
-          {/* ── Today's Log ── */}
+          {/* Today's log */}
           <section
             aria-labelledby="tab-log"
             role="tabpanel"
@@ -327,7 +326,7 @@ function App() {
             )}
           </section>
 
-          {/* ── Trends ── */}
+          {/* Trends */}
           <section
             aria-labelledby="tab-history"
             role="tabpanel"
@@ -395,7 +394,7 @@ function App() {
             )}
           </section>
 
-          {/* ── Insights ── */}
+          {/* Insights */}
           <section
             aria-labelledby="tab-dashboard"
             role="tabpanel"
@@ -407,12 +406,16 @@ function App() {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
                   Health Insights
                 </h2>
-                <NutritionDashboard mealHistory={mealHistory} userProfile={userProfile} />
+                <NutritionDashboard
+                  mealLogs={mealHistory}
+                  profile={userProfile}
+                  onAddMeal={() => setActiveTab('analyze')}
+                />
               </>
             )}
           </section>
 
-          {/* ── Profile ── */}
+          {/* Profile */}
           <section
             aria-labelledby="tab-profile"
             role="tabpanel"
