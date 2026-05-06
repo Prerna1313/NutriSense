@@ -24,6 +24,12 @@ const NutritionDashboard = ({ profile = {}, mealLogs = [], onAddMeal = () => {} 
     setHydrationMl((current) => Math.min(current + HYDRATION_STEP_ML, HYDRATION_GOAL_ML));
   };
   const resetWater = () => setHydrationMl(0);
+  const weeklyCalories = mealLogs.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+  const weeklyProtein = mealLogs.reduce((sum, meal) => sum + (meal.protein || 0), 0);
+  const avgCalories = mealLogs.length ? Math.round(weeklyCalories / Math.min(mealLogs.length, 7)) : 0;
+  const weeklySummary = mealLogs.length
+    ? `This week you logged ${mealLogs.length} meal${mealLogs.length === 1 ? '' : 's'}, averaging ${avgCalories} kcal per logged meal with ${Math.round(weeklyProtein)}g protein total.`
+    : 'Log meals to unlock a weekly pattern summary for calories, protein, and meal quality.';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 animate-in fade-in duration-700">
@@ -113,6 +119,21 @@ const NutritionDashboard = ({ profile = {}, mealLogs = [], onAddMeal = () => {} 
             <button className="mt-6 w-full py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-colors">
               Tell me more
             </button>
+          </div>
+
+          <div className="glassmorphism p-8 rounded-[2.5rem] border border-white/10">
+            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">Weekly Summary</h3>
+            <p className="text-sm font-medium leading-relaxed text-muted-foreground">{weeklySummary}</p>
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                <p className="text-xs text-muted-foreground font-bold uppercase">Meals</p>
+                <p className="text-2xl font-black">{mealLogs.length}</p>
+              </div>
+              <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                <p className="text-xs text-muted-foreground font-bold uppercase">Avg kcal</p>
+                <p className="text-2xl font-black">{avgCalories}</p>
+              </div>
+            </div>
           </div>
 
           {/* Water Tracker */}

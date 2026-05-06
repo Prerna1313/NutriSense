@@ -13,7 +13,20 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
 
   if (!analysis) return null;
 
-  const { items, total_calories, total_protein, total_carbs, total_fats, health_score, feedback } = analysis;
+  const {
+    items,
+    total_calories,
+    total_protein,
+    total_carbs,
+    total_fats,
+    health_score,
+    feedback,
+    verdict,
+    suggestions = [],
+    allergy_warning,
+    diet_preference,
+    manual_description,
+  } = analysis;
 
   const pct = (amount, target) => Math.min(Math.round((amount / target) * 100), 100);
   const fatTarget = userProfile.macros.fat ?? userProfile.macros.fats ?? 1;
@@ -26,6 +39,38 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
     if (score >= 8) return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
     if (score >= 5) return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
     return 'text-red-400 bg-red-500/10 border-red-500/20';
+  };
+
+  const reportText = [
+    'NutriSense Nutrition Report',
+    `Verdict: ${verdict?.label || 'Fair'} - ${verdict?.reason || 'Review portions and macros.'}`,
+    `Calories: ${total_calories} kcal`,
+    `Protein: ${total_protein}g`,
+    `Carbs: ${total_carbs}g`,
+    `Fats: ${total_fats}g`,
+    diet_preference ? `Diet preference: ${diet_preference}` : '',
+    manual_description ? `Meal description: ${manual_description}` : '',
+    allergy_warning ? `Allergy warning: ${allergy_warning}` : '',
+    suggestions.length ? `Suggestions: ${suggestions.join('; ')}` : '',
+    `Feedback: ${feedback}`,
+  ].filter(Boolean).join('\n');
+
+  const downloadReport = () => {
+    const blob = new Blob([reportText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'nutrisense-report.txt';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const shareReport = async () => {
+    if (navigator.share) {
+      await navigator.share({ title: 'NutriSense Nutrition Report', text: reportText });
+      return;
+    }
+    await navigator.clipboard.writeText(reportText);
   };
 
   return (
@@ -47,6 +92,23 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
             <span className="text-3xl font-bold font-display">{health_score}</span>
             <span className="text-sm opacity-70">/10</span>
           </div>
+        </div>
+      </div>
+
+      <div className="p-5 md:p-8 border-b border-border grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Meal Verdict</p>
+          <p className="text-xl font-black mt-1">{verdict?.label || 'Fair'}</p>
+          <p className="text-sm text-muted-foreground mt-1">{verdict?.reason || 'Review portions and macro balance.'}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Diet Match</p>
+          <p className="text-xl font-black mt-1 capitalize">{diet_preference || 'Balanced'}</p>
+          <p className="text-sm text-muted-foreground mt-1">Suggestions are personalized to this preference.</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Allergy Check</p>
+          <p className="text-sm text-amber-300 mt-2">{allergy_warning || 'No allergy warning added.'}</p>
         </div>
       </div>
 
@@ -80,6 +142,19 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
                 AI Insights
               </h3>
               <p className="text-foreground text-sm leading-relaxed break-words">{feedback}</p>
+            </div>
+          )}
+
+          {suggestions.length > 0 && (
+            <div className="bg-emerald-500/10 rounded-xl p-4 md:p-5 border border-emerald-500/20 max-w-full overflow-hidden">
+              <h3 className="text-sm font-bold text-emerald-300 mb-3">Personalized Suggestions</h3>
+              <ul className="space-y-2">
+                {suggestions.map((suggestion) => (
+                  <li key={suggestion} className="text-sm text-foreground leading-relaxed break-words">
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
@@ -121,7 +196,21 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
       </div>
 
       {/* Log button */}
-      <div className="p-5 md:p-8 pt-0 border-t border-border">
+      <div className="p-5 md:p-8 pt-0 border-t border-border space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onClick={downloadReport}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold hover:bg-white/10 transition-colors"
+          >
+            Download Report
+          </button>
+          <button
+            onClick={shareReport}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold hover:bg-white/10 transition-colors"
+          >
+            Share / Copy Report
+          </button>
+        </div>
         <button
           onClick={() => { onLogMeal(analysis); setIsLogged(true); }}
           disabled={isLogged}

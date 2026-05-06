@@ -66,6 +66,25 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
       colorClass: 'bg-orange-500',
     },
   ];
+  const proteinTarget = Math.round(caloTarget * 0.075);
+  const hydrationMl = Number(localStorage.getItem('nutrisense_hydration_ml') || 0);
+  const badges = [
+    {
+      label: totals.calories >= caloTarget * 0.9 ? 'Calories near goal' : 'Calories remaining',
+      value: `${Math.round(totals.calories)} / ${caloTarget} kcal`,
+      cls: totals.calories >= caloTarget * 0.9 ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/5 text-slate-300',
+    },
+    {
+      label: totals.protein >= proteinTarget ? 'Protein on track' : 'Protein low',
+      value: `${Math.round(totals.protein)} / ${proteinTarget}g`,
+      cls: totals.protein >= proteinTarget ? 'bg-emerald-500/15 text-emerald-300' : 'bg-amber-500/15 text-amber-300',
+    },
+    {
+      label: hydrationMl >= 2000 ? 'Hydration good' : 'Hydration low',
+      value: `${(hydrationMl / 1000).toFixed(1)}L`,
+      cls: hydrationMl >= 2000 ? 'bg-sky-500/15 text-sky-300' : 'bg-white/5 text-slate-300',
+    },
+  ];
 
   const handleDelete = (entry) => {
     deleteMeal(entry.id);
@@ -81,6 +100,15 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
           {entries.length} meal{entries.length !== 1 ? 's' : ''} logged -{' '}
           {Math.round(totals.calories)} kcal consumed
         </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {badges.map((badge) => (
+          <div key={badge.label} className={`rounded-2xl border border-white/10 p-4 ${badge.cls}`}>
+            <p className="text-xs font-black uppercase tracking-widest">{badge.label}</p>
+            <p className="text-lg font-black mt-1">{badge.value}</p>
+          </div>
+        ))}
       </div>
 
       {/* Section B — Macro Progress */}

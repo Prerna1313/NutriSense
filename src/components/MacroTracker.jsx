@@ -5,7 +5,7 @@ const MacroTracker = ({ profile, logs }) => {
     acc.calories += log.calories || 0;
     acc.protein += log.protein || 0;
     acc.carbs += log.carbs || 0;
-    acc.fats += log.fats || 0;
+    acc.fats += log.fat ?? log.fats ?? 0;
     return acc;
   }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
 
@@ -19,7 +19,7 @@ const MacroTracker = ({ profile, logs }) => {
   const CircularProgress = ({ value, target, size = 180, strokeWidth = 14, colorClass }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
-    const percentage = Math.min((value / target) * 100, 100);
+    const percentage = target > 0 ? Math.min((value / target) * 100, 100) : 0;
     const offset = circumference - (percentage / 100) * circumference;
 
     return (
@@ -81,7 +81,7 @@ const MacroTracker = ({ profile, logs }) => {
 
           <div className="space-y-10">
             {stats.slice(1).map((stat) => {
-              const percentage = Math.min((stat.current / stat.target) * 100, 100);
+              const percentage = stat.target > 0 ? Math.min((stat.current / stat.target) * 100, 100) : 0;
               return (
                 <div key={stat.label} className="space-y-3">
                   <div className="flex justify-between items-end">
