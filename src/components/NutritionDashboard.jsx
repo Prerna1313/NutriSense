@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MacroTracker from './MacroTracker';
+
+const HYDRATION_KEY = 'nutrisense_hydration_ml';
+const HYDRATION_GOAL_ML = 3000;
+const HYDRATION_STEP_ML = 250;
 
 const NutritionDashboard = ({ profile = {}, mealLogs = [], onAddMeal = () => {} }) => {
   const recentMeals = [...mealLogs].reverse().slice(0, 5);
   const displayName = profile.name || 'there';
+  const [hydrationMl, setHydrationMl] = useState(() => {
+    const saved = Number(localStorage.getItem(HYDRATION_KEY));
+    return Number.isFinite(saved) ? saved : 1200;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(HYDRATION_KEY, String(hydrationMl));
+  }, [hydrationMl]);
+
+  const hydrationBlocks = 8;
+  const filledBlocks = Math.round((hydrationMl / HYDRATION_GOAL_ML) * hydrationBlocks);
+  const hydrationText = `${(hydrationMl / 1000).toFixed(2).replace(/\.?0+$/, '')}L / 3L`;
+  const addWater = () => {
+    setHydrationMl((current) => Math.min(current + HYDRATION_STEP_ML, HYDRATION_GOAL_ML));
+  };
+  const resetWater = () => setHydrationMl(0);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 animate-in fade-in duration-700">
@@ -99,16 +119,28 @@ const NutritionDashboard = ({ profile = {}, mealLogs = [], onAddMeal = () => {} 
           <div className="glassmorphism p-8 rounded-[2.5rem] border border-white/10">
              <div className="flex items-center justify-between mb-6">
                 <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">Hydration</h3>
-                <span className="text-primary font-black text-lg">1.2L / 3L</span>
+                <span className="text-primary font-black text-lg">{hydrationText}</span>
              </div>
-             <div className="flex gap-2 mb-6">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                  <div key={i} className={`flex-grow h-12 rounded-lg border ${i <= 3 ? 'bg-primary border-primary/20 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]' : 'bg-muted/30 border-white/5'} transition-all`}></div>
+             <div className="flex gap-2 mb-6" aria-label={`Hydration progress ${hydrationText}`}>
+                {Array.from({ length: hydrationBlocks }, (_, index) => index + 1).map((i) => (
+                  <div key={i} className={`flex-grow h-12 rounded-lg border ${i <= filledBlocks ? 'bg-primary border-primary/20 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]' : 'bg-muted/30 border-white/5'} transition-all`}></div>
                 ))}
              </div>
-             <button className="w-full py-4 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primary hover:text-white transition-all">
-                Add 250ml
-             </button>
+             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+               <button
+                 onClick={addWater}
+                 disabled={hydrationMl >= HYDRATION_GOAL_ML}
+                 className="w-full py-4 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primary hover:text-white disabled:opacity-50 disabled:hover:bg-primary/10 disabled:hover:text-primary transition-all"
+               >
+                  {hydrationMl >= HYDRATION_GOAL_ML ? 'Goal Reached' : 'Add 250ml'}
+               </button>
+               <button
+                 onClick={resetWater}
+                 className="px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-colors"
+               >
+                 Reset
+               </button>
+             </div>
           </div>
         </div>
       </div>
