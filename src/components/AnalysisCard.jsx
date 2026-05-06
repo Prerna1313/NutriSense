@@ -16,10 +16,11 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
   const { items, total_calories, total_protein, total_carbs, total_fats, health_score, feedback } = analysis;
 
   const pct = (amount, target) => Math.min(Math.round((amount / target) * 100), 100);
+  const fatTarget = userProfile.macros.fat ?? userProfile.macros.fats ?? 1;
   const calsPercent    = pct(total_calories, userProfile.tdee);
   const proteinPercent = pct(total_protein,  userProfile.macros.protein);
   const carbsPercent   = pct(total_carbs,    userProfile.macros.carbs);
-  const fatsPercent    = pct(total_fats,     userProfile.macros.fats);
+  const fatsPercent    = pct(total_fats,     fatTarget);
 
   const getScoreColor = (score) => {
     if (score >= 8) return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
@@ -58,7 +59,7 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
               { label: 'Calories', value: `${total_calories} / ${Math.round(userProfile.tdee)} kcal`, pct: calsPercent, barCls: 'bg-emerald-500', textCls: 'text-emerald-400' },
               { label: 'Protein',  value: `${total_protein}g / ${userProfile.macros.protein}g`,        pct: proteinPercent, barCls: 'bg-blue-500',    textCls: 'text-blue-400' },
               { label: 'Carbs',    value: `${total_carbs}g / ${userProfile.macros.carbs}g`,            pct: carbsPercent,   barCls: 'bg-amber-500',   textCls: 'text-amber-400' },
-              { label: 'Fats',     value: `${total_fats}g / ${userProfile.macros.fats}g`,             pct: fatsPercent,    barCls: 'bg-rose-500',    textCls: 'text-rose-400' },
+              { label: 'Fats',     value: `${total_fats}g / ${fatTarget}g`,                          pct: fatsPercent,    barCls: 'bg-rose-500',    textCls: 'text-rose-400' },
             ].map(({ label, value, pct: p, barCls, textCls }) => (
               <div key={label}>
                 <div className="flex justify-between text-sm mb-1.5">

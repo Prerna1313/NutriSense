@@ -13,7 +13,7 @@ const MacroTracker = ({ profile, logs }) => {
     { label: 'Calories', current: totals.calories, target: profile.tdee, color: 'primary', unit: 'kcal' },
     { label: 'Protein', current: totals.protein, target: profile.macros.protein, color: 'blue-500', unit: 'g' },
     { label: 'Carbs', current: totals.carbs, target: profile.macros.carbs, color: 'amber-500', unit: 'g' },
-    { label: 'Fats', current: totals.fats, target: profile.macros.fats, color: 'rose-500', unit: 'g' },
+    { label: 'Fats', current: totals.fats, target: profile.macros.fat ?? profile.macros.fats ?? 0, color: 'rose-500', unit: 'g' },
   ];
 
   const CircularProgress = ({ value, target, size = 180, strokeWidth = 14, colorClass }) => {
