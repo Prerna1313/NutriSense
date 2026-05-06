@@ -131,7 +131,7 @@ function App() {
   return (
     <div className="flex min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Sidebar */}
-      <aside className="w-72 shrink-0 glassmorphism border-r border-border hidden md:flex flex-col z-10">
+      <aside className="w-72 xl:w-80 shrink-0 glassmorphism border-r border-border hidden md:flex flex-col z-10 sticky top-0 h-screen">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/20 p-2 rounded-xl" aria-hidden="true">
@@ -266,46 +266,52 @@ function App() {
           </p>
         </header>
 
-        <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12 animate-fade-in-up">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-14 py-6 md:py-10 xl:py-12 animate-fade-in-up">
 
           {/* Analyze meal */}
           <section
             aria-labelledby="tab-analyze"
             role="tabpanel"
             hidden={activeTab !== 'analyze'}
-            className="space-y-10"
+            className="space-y-8"
           >
             {activeTab === 'analyze' && (
               <>
-                <div className="space-y-2">
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                <div className="max-w-5xl space-y-2">
+                  <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-display">
                     Analyze Your Meal
                   </h2>
-                  <p className="text-lg text-muted-foreground">
-                    Snap a photo or describe what you're eating for a real-time nutritional breakdown.
+                  <p className="text-lg md:text-xl text-muted-foreground max-w-3xl">
+                    Snap a photo, describe an Indian meal, or run the sample demo to generate a nutrition report judges can inspect quickly.
                   </p>
                 </div>
 
-                <MealAnalyzer userProfile={userProfile} onAnalysisComplete={handleAnalysisComplete} />
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(420px,0.9fr)_minmax(560px,1.1fr)] gap-8 items-start">
+                  <div className="xl:sticky xl:top-10">
+                    <MealAnalyzer userProfile={userProfile} onAnalysisComplete={handleAnalysisComplete} />
+                  </div>
 
-                {analysisResult ? (
-                  <div className="animate-fade-in-up">
-                    <AnalysisCard analysis={analysisResult} userProfile={userProfile} onLogMeal={handleLogMeal} />
-                  </div>
-                ) : (
-                  /* Empty analysis state */
-                  <div className="flex flex-col items-center gap-4 py-12 text-center">
-                    <div
-                      className="w-[120px] h-[120px] rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center"
-                      aria-hidden="true"
-                    >
-                      <Leaf size={56} className="text-emerald-400" />
+                  {analysisResult ? (
+                    <div className="animate-fade-in-up">
+                      <AnalysisCard analysis={analysisResult} userProfile={userProfile} onLogMeal={handleLogMeal} />
                     </div>
-                    <p className="text-slate-400 dark:text-slate-500 text-sm">
-                      Your meal analysis will appear here
-                    </p>
-                  </div>
-                )}
+                  ) : (
+                    <div className="min-h-[520px] rounded-3xl border border-dashed border-white/10 bg-white/[0.03] flex flex-col items-center justify-center gap-5 p-8 text-center">
+                      <div
+                        className="w-[132px] h-[132px] rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center"
+                        aria-hidden="true"
+                      >
+                        <Leaf size={62} className="text-emerald-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black">Analysis Preview</h3>
+                        <p className="text-slate-400 dark:text-slate-500 text-sm max-w-md mt-2">
+                          Your nutrition card, verdict, suggestions, allergy warning, and downloadable report will appear here.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </>
             )}
           </section>
@@ -317,12 +323,14 @@ function App() {
             hidden={activeTab !== 'log'}
           >
             {activeTab === 'log' && (
-              <Dashboard
-                entries={todayEntries}
-                profile={userProfile}
-                onDeleteMeal={handleDeleteMeal}
-                onSwitchTab={setActiveTab}
-              />
+              <div className="max-w-6xl">
+                <Dashboard
+                  entries={todayEntries}
+                  profile={userProfile}
+                  onDeleteMeal={handleDeleteMeal}
+                  onSwitchTab={setActiveTab}
+                />
+              </div>
             )}
           </section>
 
@@ -335,7 +343,7 @@ function App() {
           >
             {activeTab === 'history' && (
               <>
-                <div className="flex justify-between items-end flex-wrap gap-2">
+                <div className="flex justify-between items-end flex-wrap gap-2 max-w-6xl">
                   <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
                     Nutrition History
                   </h2>
@@ -345,7 +353,7 @@ function App() {
                 </div>
 
                 {mealHistory.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-6">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 max-w-7xl">
                     {mealHistory.map((meal) => (
                       <div
                         key={meal.id}
@@ -380,7 +388,7 @@ function App() {
                     ))}
                   </div>
                 ) : (
-                  <div className="glassmorphism p-16 rounded-3xl text-center border-dashed border-2 border-border/50">
+                  <div className="glassmorphism p-16 rounded-3xl text-center border-dashed border-2 border-border/50 max-w-4xl">
                     <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                       <History size={40} className="text-primary opacity-50" aria-hidden="true" />
                     </div>
@@ -403,7 +411,7 @@ function App() {
           >
             {activeTab === 'dashboard' && (
               <>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-display">
                   Health Insights
                 </h2>
                 <NutritionDashboard
@@ -426,11 +434,13 @@ function App() {
               <>
                 <h2
                   id="profile-heading"
-                  className="text-3xl md:text-4xl font-bold tracking-tight font-display"
+                  className="text-3xl md:text-5xl font-bold tracking-tight font-display"
                 >
                   Health Profile
                 </h2>
-                <ProfileSetup onComplete={handleProfileComplete} initialData={userProfile} />
+                <div className="max-w-4xl">
+                  <ProfileSetup onComplete={handleProfileComplete} initialData={userProfile} />
+                </div>
               </>
             )}
           </section>

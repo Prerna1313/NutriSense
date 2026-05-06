@@ -93,13 +93,13 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
   };
 
   return (
-    <div className="w-full max-w-full bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 animate-fade-in-up">
+    <div className="w-full max-w-full bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 xl:mb-0 animate-fade-in-up">
       <div className="p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400" aria-hidden="true">
             <Camera size={24} />
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-white font-display">Analyze Meal</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-white font-display">Meal Input</h2>
         </div>
 
         {error && (
@@ -140,7 +140,7 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <label className="space-y-2">
                 <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Meal description</span>
                 <textarea
@@ -151,7 +151,7 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
                   className="w-full bg-slate-900/70 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-emerald-500/40"
                 />
               </label>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
                 <label className="space-y-2 block">
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Diet preference</span>
                   <select

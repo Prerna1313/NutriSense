@@ -112,7 +112,7 @@ const AnalysisCard = ({ analysis, userProfile, onLogMeal }) => {
         </div>
       </div>
 
-      <div className="p-5 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <div className="p-5 md:p-8 grid grid-cols-1 2xl:grid-cols-2 gap-6 md:gap-8">
         {/* Left: Macros + Feedback */}
         <div className="space-y-8">
           <div className="space-y-5">
