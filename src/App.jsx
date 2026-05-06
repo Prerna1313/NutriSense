@@ -129,9 +129,9 @@ function App() {
   ];
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Sidebar */}
-      <aside className="w-72 glassmorphism border-r border-border hidden md:flex flex-col z-10">
+      <aside className="w-72 shrink-0 glassmorphism border-r border-border hidden md:flex flex-col z-10">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-primary/20 p-2 rounded-xl" aria-hidden="true">
@@ -246,7 +246,7 @@ function App() {
       {/* Main content */}
       <main
         id="main-content"
-        className="flex-1 overflow-y-auto relative scroll-smooth pb-20 md:pb-0"
+        className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden relative scroll-smooth pb-20 md:pb-0"
       >
         {/* Mobile header with calorie budget */}
         <header className="md:hidden sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 py-3 flex flex-wrap items-center justify-between gap-2">
@@ -266,7 +266,7 @@ function App() {
           </p>
         </header>
 
-        <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-12 animate-fade-in-up">
+        <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12 animate-fade-in-up">
 
           {/* Analyze meal */}
           <section

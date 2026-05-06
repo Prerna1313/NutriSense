@@ -61,13 +61,13 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
   };
 
   return (
-    <div className="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 animate-fade-in-up">
+    <div className="w-full max-w-full bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 animate-fade-in-up">
       <div className="p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400" aria-hidden="true">
             <Camera size={24} />
           </div>
-          <h2 className="text-2xl font-bold text-white font-display">Analyze Meal</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-white font-display">Analyze Meal</h2>
         </div>
 
         {error && (
@@ -84,7 +84,7 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
             role="button"
             tabIndex={0}
             aria-label="Upload or take a photo of your meal"
-            className="border-2 border-dashed border-slate-600 hover:border-emerald-500/50 rounded-2xl p-12 text-center transition-colors cursor-pointer group focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            className="border-2 border-dashed border-slate-600 hover:border-emerald-500/50 rounded-2xl p-6 sm:p-10 md:p-12 text-center transition-colors cursor-pointer group focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             onClick={() => fileInputRef.current?.click()}
             onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
           >
@@ -103,7 +103,7 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
           <div className="space-y-6">
             <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-700 aspect-video md:aspect-[21/9] flex items-center justify-center">
               <img src={imagePreview} alt="Meal to analyze" className="max-w-full max-h-full object-contain" />
-              <button onClick={resetImage} className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-700 transition-colors">
+              <button onClick={resetImage} className="absolute top-3 right-3 max-w-[calc(100%-1.5rem)] bg-slate-900/80 backdrop-blur text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border border-slate-700 transition-colors">
                 Change Photo
               </button>
             </div>
@@ -111,7 +111,7 @@ const MealAnalyzer = ({ userProfile, onAnalysisComplete }) => {
               <button
                 onClick={handleAnalyze}
                 disabled={isAnalyzing}
-                className="group flex items-center justify-center gap-2 w-full md:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 font-bold py-3 px-8 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 motion-reduce:active:scale-100"
+                className="group flex flex-wrap items-center justify-center gap-2 w-full md:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 font-bold py-3 px-5 md:px-8 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 motion-reduce:active:scale-100"
               >
                 <Sparkles size={20} className="group-hover:animate-pulse" aria-hidden="true" />
                 <span>Analyze Nutritional Value</span>

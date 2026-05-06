@@ -73,7 +73,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-full overflow-hidden">
       {/* Section A — Daily Summary Header */}
       <div>
         <h2 className="text-3xl font-bold tracking-tight">{formatDate()}</h2>
@@ -84,7 +84,7 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
       </div>
 
       {/* Section B — Macro Progress */}
-      <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 shadow-lg">
+      <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 md:p-6 shadow-lg overflow-hidden">
         <h2 className="text-lg font-semibold text-slate-200 mb-5">Today's Progress</h2>
         <div aria-live="polite" className="space-y-4">
           {macros.map((m) => (
@@ -119,10 +119,10 @@ const Dashboard = ({ entries = [], profile = {}, onDeleteMeal, onSwitchTab }) =>
               <div
                 key={entry.id}
                 role="listitem"
-                className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center justify-between gap-4"
+              className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 overflow-hidden"
               >
                 {/* Left */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 w-full">
                   <p className="font-medium text-slate-800 truncate">{entry.mealName}</p>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <span className="text-xs text-slate-400">{formatTime(entry.loggedAt)}</span>
